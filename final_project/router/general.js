@@ -1,29 +1,39 @@
 const express = require('express');
 let books = require("./booksdb.js");
-let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
-
 
 public_users.post("/register", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-
+  
+    // Check that both username and password were provided
     if (!username || !password) {
-        return res.status(400).json({ message: "Username and password are required" });
+      return res.status(400).json({
+        message: "Username and password are required"
+      });
     }
-
-    const userExists = users.find((user) => user.username === username);
-
-    if (userExists) {
-        return res.status(409).json({ message: "Username already exists" });
+  
+    // Check if the username already exists
+    if (users.find((user) => user.username === username)) {
+      return res.status(409).json({
+        message: "Username already exists"
+      });
     }
-
-    users.push({ username: username, password: password });
-
-    return res.status(201).json({ message: "User successfully registered" });
-});
-
+  
+    // Add the new user to the shared users array
+    users.push({
+      username: username,
+      password: password
+    });
+  
+    // Return success message
+    return res.status(201).json({
+      message: "User successfully registered"
+    });
+  });
+  
+  
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
   return res.status(200).send(JSON.stringify(books, null, 4));
