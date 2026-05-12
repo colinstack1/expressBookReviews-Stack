@@ -1,0 +1,8 @@
+ curl -X POST http://localhost:5000/register \
+-H "Content-Type: application/json" \
+-d '{"username":"colinnew","password":"password123"}'
+{"message":"User successfully registered"}theia@theia-colinstackaa:/home/project/expressBookReviews-Sta
+ck/final_project$ curl -c cookies.txt -X POST http://localhost:5000/customer/login \
+-H "Content-Type: application/json" \
+-d '{"username":"colinnew","password":"password123"}'
+{"message":"User successfully logged in"}
