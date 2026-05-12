@@ -5,9 +5,23 @@ let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
 
-public_users.post("/register", (req,res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+public_users.post("/register", (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    if (!username || !password) {
+        return res.status(400).json({ message: "Username and password are required" });
+    }
+
+    const userExists = users.find((user) => user.username === username);
+
+    if (userExists) {
+        return res.status(409).json({ message: "Username already exists" });
+    }
+
+    users.push({ username: username, password: password });
+
+    return res.status(201).json({ message: "User successfully registered" });
 });
 
 // Get the book list available in the shop
@@ -55,9 +69,14 @@ public_users.get('/title/:title', function (req, res) {
 });
 
 //  Get book review
-public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+public_users.get('/review/:isbn', function (req, res) {
+    const isbn = req.params.isbn;
+
+    if (books[isbn]) {
+        return res.status(200).json(books[isbn].reviews);
+    }
+
+    return res.status(404).json({ message: "Book not found" });
 });
 
 module.exports.general = public_users;
